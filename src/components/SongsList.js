@@ -4,7 +4,8 @@ import { fetchMoreSongs, fetchAlbum } from "../redux/actions/songsActions";
 import { setTrackIndex, togglePlay } from "../redux/actions/playerActions";
 import Loading from "./Loading";
 import styled from "styled-components";
-import { FaArrowUp } from "react-icons/fa";
+import { FaArrowUp, FaShare } from "react-icons/fa";
+import {filterDataOfSongs} from "../utils";
 
 const Wrapper = styled.div`
   height: 65%;
@@ -26,7 +27,6 @@ const List = styled.ul`
 const ListItem = styled.li`
   margin: 1% auto;
   width: 90%;
-  max-width: 500px;
   height: 12%;
   max-height: 80px;
   min-height: 65px;
@@ -51,7 +51,6 @@ const LoadMoreButton = styled.button`
   outline: none;
 `;
 const Title = styled.a`
-
   flex: 1;
   display: block;
   font-size: 1.2em;
@@ -59,7 +58,7 @@ const Title = styled.a`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
-const Artist = styled.p`
+const Artist = styled.a`
   flex: 1;
   font-size: 0.9em;
   font-style: italic;
@@ -67,6 +66,37 @@ const Artist = styled.p`
 const Album = styled.img`
   height: 100%;
   border-left: 2px solid black;
+`;
+
+const LinkParaDeezzer = styled.a`
+  padding: 5px;
+
+  &:hover {
+    background-color: red;
+  }
+`;
+
+const BoxMusic = styled.div`
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding-left: 10px;
+  width: 100%;
+
+  p{
+    display: flex;
+    justify-content:center;
+  }
+  a{
+    display: flex;
+    justify-content:center;
+  }
+`;
+
+const NomeDoAlbum = styled.a`
+  flex: 1;
 `;
 
 const SongsList = props => {
@@ -87,16 +117,6 @@ const SongsList = props => {
     props.togglePlay(false);
     props.loadAlbum(id);
   };
-
-  const handleNameClick = e => {
-    const { index } = e.target.parentElement.dataset;
-    const { songs } = props.state.songs;
-    const { id } = songs[index].name;
-    if (!id) return;
-    props.setTrackIndex(0);
-    props.togglePlay(false);
-    props.loadAlbum(id);
-  }
 
   const { songs, lastQuery, index, isFetching } = props.state.songs;
 
@@ -128,23 +148,18 @@ const SongsList = props => {
                 onClick={e => handleClick(e)}
                 key={i}
               >
-              <Album id="album" onClick={handleAlbumClick} alt="album" src={cover} />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    pointerEvents: "none",
-                    width: "100%",
-                    overflow: "hidden",
-                    paddingLeft: "10px"
-                  }}
-                >
+              <Album id="album" onClick={handleAlbumClick} alt="album" src={cover} label={song.album.id}/>
+                <BoxMusic>
                   <Title id="title" >
-                    {title}
+                    {song.title}
                     {/* {title.length > 23 ? title.slice(0, 23) + "..." : title} */}
                   </Title>
-                  <Artist onclick={handleNameClick} id="artist" src={name}>{name}</Artist >
-                </div>
+                  <Artist  id="artist" src={song.artist.name}>{song.artist.name}</Artist >
+                  <NomeDoAlbum>{song.album.title}</NomeDoAlbum>
+                  <LinkParaDeezzer href={`https://www.deezer.com/track/${song.id}`}>
+                    <FaShare/>
+                  </LinkParaDeezzer>
+                </BoxMusic>
               </ListItem>
             );
           })}

@@ -4,18 +4,9 @@ import { setTrackIndex, togglePlay } from "../redux/actions/playerActions";
 import { setTimeStamp } from "../utils";
 import styled from "styled-components";
 import { isIOS } from "react-device-detect";
-import { FiPlay, FiPause } from "react-icons/fi"
 import { IoIosPlay, IoIosPause } from "react-icons/io"
 import { GoChevronRight, GoChevronLeft } from "react-icons/go"
-
-import {
-  FaPlay,
-  FaPause,
-  FaAngleDoubleLeft,
-  FaAngleDoubleRight,
-  FaVolumeOff,
-  FaVolumeUp
-} from "react-icons/fa";
+import { FaVolumeOff } from "react-icons/fa";
 
 const PlayerWrapper = styled.div`
   width: 100%;
@@ -72,7 +63,7 @@ transition: transform 0.2s cubic-bezier(0.14, 1.35, 0.54, 1.95);
   }
   `;
 
-  const CurrentTrack = styled.p`
+  const CurrentTrack = styled.a`
   display: block;
   color: #000000;
   font-size: 0.9em;
@@ -269,7 +260,7 @@ const Player = props => {
         src={playlist[trackIndex] && playlist[trackIndex].preview}
       ></audio>
       <Canvas ref={canvas}></Canvas>
-      <CurrentTrack id="CurrentTrack">
+      <CurrentTrack id="CurrentTrack" >
         {playlist[trackIndex]
           ? `${playlist[trackIndex].artist.name} - ${playlist[trackIndex].title}`
           : "..."}
@@ -298,7 +289,6 @@ const Player = props => {
           <FaVolumeOff id="FaVolumeOff" style={{ cursor: "pointer" }}onClick={() => handleMute(0)}/>
           <VolumeBar id="VolumeBar" ref={volumeBarRef} onClick={handleVolumeChange}>
             <Volume id= "volume" ref={volumeRef}></Volume>
-            <input type="range"/>
           </VolumeBar>
         </BoxVolume>
     </PlayerWrapper>
