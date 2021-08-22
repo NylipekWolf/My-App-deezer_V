@@ -1,11 +1,10 @@
-import React from "react";
+import React from 'react';
 import { connect } from "react-redux";
-import { fetchMoreSongs, fetchAlbum } from "../redux/actions/songsActions";
-import { setTrackIndex, togglePlay } from "../redux/actions/playerActions";
-import Loading from "./Loading";
+import { fetchMoreSongs, fetchAlbum } from "../../store/actions/songsActions";
+import { setTrackIndex, togglePlay } from "../../store/actions/playerActions";
+import Loading from "../Loading";
 import styled from "styled-components";
 import { FaArrowUp, FaShare } from "react-icons/fa";
-import {filterDataOfSongs} from "../utils";
 
 const Wrapper = styled.div`
   height: 65%;
@@ -13,6 +12,7 @@ const Wrapper = styled.div`
   flex: 1 1 auto;
   position: relative;
   background: #fff;
+  padding: 12px;
 `;
 const List = styled.ul`
   overflow-y: scroll;
@@ -31,14 +31,15 @@ const ListItem = styled.li`
   max-height: 80px;
   min-height: 65px;
   background: hsla(0, 0%, 100%, 0.25);
-  border-bottom: 4px solid black;
+  border: 1px solid #eaeaea
   display: flex;
+  align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.14, 1.35, 0.54, 1.95),
+  transition: transform 0.3s cubic-bezier(0.14, 1.35, 0.54, 1.95),
     background 0.2s ease-in-out;
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.01);
   }
 `;
 const LoadMoreButton = styled.button`
@@ -65,14 +66,30 @@ const Artist = styled.a`
 `;
 const Album = styled.img`
   height: 100%;
-  border-left: 2px solid black;
+  padding :8px;
 `;
 
 const LinkParaDeezzer = styled.a`
+  width: 100px;
   padding: 5px;
+  position: relative;
+  text-decoration: none;
+  color:#000000;
 
-  &:hover {
-    background-color: red;
+  p{
+    display:none!important;
+    position:absolute;
+    font-size: 70%;
+    padding:2px;
+    width:100%;
+    top: 20px;
+    left:-30px;
+    color:#000000;
+    text-align:center;
+    background-color: #b4b3b5;
+  }
+  &:hover > p {
+    display:flex!important;
   }
 `;
 
@@ -84,6 +101,7 @@ const BoxMusic = styled.div`
   overflow: hidden;
   padding-left: 10px;
   width: 100%;
+  pointer-events: none;
 
   p{
     display: flex;
@@ -93,10 +111,6 @@ const BoxMusic = styled.div`
     display: flex;
     justify-content:center;
   }
-`;
-
-const NomeDoAlbum = styled.a`
-  flex: 1;
 `;
 
 const SongsList = props => {
@@ -114,11 +128,11 @@ const SongsList = props => {
     const { id } = songs[index].album;
     if (!id) return;
     props.setTrackIndex(0);
-    props.togglePlay(false);
+    props.togglePlay(false); 
     props.loadAlbum(id);
   };
 
-  const { songs, lastQuery, index, isFetching } = props.state.songs;
+  const { songs, lastQuery, index, isFetching} = props.state.songs;
 
   const checkActive = index => {
     return Number(index) === props.state.player.trackIndex
@@ -126,7 +140,6 @@ const SongsList = props => {
       : null;
   };
 
-  console.log(isFetching);
 
   return (
     <Wrapper id="Wrapper">
@@ -137,6 +150,7 @@ const SongsList = props => {
         >
           {songs.map((song, i) => {
             const {
+              id: id,
               title_short: title,
               artist: { name },
               album: { cover }
@@ -148,18 +162,15 @@ const SongsList = props => {
                 onClick={e => handleClick(e)}
                 key={i}
               >
-              <Album id="album" onClick={handleAlbumClick} alt="album" src={cover} label={song.album.id}/>
+              <Album id="album" onClick={handleAlbumClick} alt="album" src={cover}/>
                 <BoxMusic>
-                  <Title id="title" >
-                    {song.title}
-                    {/* {title.length > 23 ? title.slice(0, 23) + "..." : title} */}
-                  </Title>
-                  <Artist  id="artist" src={song.artist.name}>{song.artist.name}</Artist >
-                  <NomeDoAlbum>{song.album.title}</NomeDoAlbum>
-                  <LinkParaDeezzer href={`https://www.deezer.com/track/${song.id}`}>
-                    <FaShare/>
-                  </LinkParaDeezzer>
+                  <Artist  id="artist" src={name}>{name}</Artist >
+                  <Title onClick={handleAlbumClick} id="title" src={cover}>{title}</Title>
                 </BoxMusic>
+                  <LinkParaDeezzer href={`https://www.deezer.com/track/${id}`}>
+                    <FaShare/>
+                    <p>Play no deezer</p>
+                  </LinkParaDeezzer>
               </ListItem>
             );
           })}
@@ -173,9 +184,9 @@ const SongsList = props => {
         </List>
       ) : (
         <p style={{ textAlign: "center" }}>
-          Search for your favourite songs!{" "}
-          <FaArrowUp style={{ fontSize: "1.25em" }} />
+          Ate agora só conseguir fazer buscar as musicas, por favor tente isso
         </p>
+
       )}
     </Wrapper>
   );

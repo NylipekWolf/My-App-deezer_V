@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { fetchSongs, fetchMoreSongs } from "../redux/actions/songsActions";
-import { setTrackIndex, togglePlay } from "../redux/actions/playerActions";
+import { fetchSongs, fetchMoreSongs } from "../../store/actions/songsActions";
+import { setTrackIndex, togglePlay } from "../../store/actions/playerActions";
 import styled from "styled-components";
 import {FaSistrix } from "react-icons/fa";
 import {BsMusicPlayerFill} from "react-icons/bs";
@@ -93,7 +93,7 @@ const SearchBar = props => {
         <SubmitButton id="submit" type="submit">
           <FaSistrix id="faSistrix" />
         </SubmitButton>
-        <Input id="input" type="text"placeholder="Buscar" onChange={handleChange} type="text"/>
+        <Input id="input" placeholder="Buscar" onChange={handleChange} type="text"/>
       </Form>
     </BarWrapper>
   );

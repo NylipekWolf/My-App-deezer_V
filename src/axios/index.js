@@ -20,7 +20,7 @@ export const getSongs = async query => {
 
 export const getMoreSongs = async (query, index) => {
   if (!query) return;
-  index += 25;
+  index += 50;
   const res = await request.get(`search?q=${query}&index=${index}`);
   const { data: songs } = res.data;
   return { songs, index };
@@ -29,6 +29,18 @@ export const getMoreSongs = async (query, index) => {
 export const getAlbum = async id => {
   if (!id) return;
   const res = await request.get(`album/${id}`);
+  const { tracks, cover } = res.data;
+  const songs = [...tracks.data];
+  for (let song of songs) {
+    song.album = {};
+    song.album.cover = cover;
+  }
+  return songs;
+};
+
+export const getPlaylist = async id => {
+  if(!id ) return;
+  const res = await request.get(`playlist/3155776842`)
   const { tracks, cover } = res.data;
   const songs = [...tracks.data];
   for (let song of songs) {
